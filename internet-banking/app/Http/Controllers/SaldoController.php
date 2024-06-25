@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Transaction;
+
 
 class SaldoController extends Controller
 {
@@ -23,6 +25,13 @@ class SaldoController extends Controller
         $user = Auth::user();
         $user->saldo += $request->amount;
         $user->save();
+
+        // Simpan transaksi
+    $transaction = new Transaction();
+    $transaction->user_id = $user->id;
+    $transaction->deskripsi = 'Penambahan saldo';
+    $transaction->jumlah = $request->amount;
+    $transaction->save();
 
         return redirect()->route('saldo')->with('success', 'Saldo berhasil ditambahkan!');
     }

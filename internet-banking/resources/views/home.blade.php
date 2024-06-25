@@ -12,6 +12,8 @@
 
     <a href="{{ route('saldo') }}">
     <button>Cek Saldo</button>
+
+    <a href="{{ route('mutasi-rekening') }}">Mutasi Rekening</a>
 </a>
 </body>
 </html>

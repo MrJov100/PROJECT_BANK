@@ -5,6 +5,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
+    <a href="{{ route('home') }}">Kembali ke Home</a>
     <h1>Jumlah Saldo: Rp{{ number_format(Auth::user()->saldo, 2) }}</h1>
 
     @if (session('success'))
