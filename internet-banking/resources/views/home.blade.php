@@ -108,6 +108,7 @@
         <div class="button-container">
             <a href="{{ route('saldo') }}"><button class="btn btn-outline-primary">Setor Uang</button></a>
             <a href="{{ route('mutasi-rekening') }}"><button class="btn btn-outline-primary">Mutasi Rekening</button></a>
+            <a href="{{ route('transfer') }}"><button class="btn">Transfer Saldo</button></a> <!-- Tombol Transfer -->
         </div>
 
         <form action="{{ route('logout') }}" method="POST">

@@ -34,3 +34,11 @@ Route::post('saldo', [SaldoController::class, 'addSaldo'])->middleware('auth')->
 use App\Http\Controllers\MutasiRekeningController;
 
 Route::get('mutasi-rekening', [MutasiRekeningController::class, 'index'])->middleware('auth')->name('mutasi-rekening');
+
+
+// routes/web.php
+
+use App\Http\Controllers\TransferController;
+
+Route::get('transfer', [TransferController::class, 'showTransferForm'])->middleware('auth')->name('transfer');
+Route::post('transfer', [TransferController::class, 'transfer'])->middleware('auth')->name('transfer.post');

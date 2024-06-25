@@ -11,10 +11,12 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    // Define fillable fields if needed
-    protected $fillable = ['user_id', 'deskripsi', 'jumlah'];
+    protected $fillable = [
+        'user_id',
+        'deskripsi',
+        'jumlah'
+    ];
 
-    // Define relationship to user
     public function user()
     {
         return $this->belongsTo(User::class);
