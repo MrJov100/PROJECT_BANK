@@ -1,19 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Internet Banking</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2980b9, #2c3e50); /* Gradient background */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.95); /* Background semi-transparent putih */
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            margin: 20px;
+            padding: 30px;
+            color: #333; /* Warna teks utama */
+        }
+        h1 {
+            color: #007bff; /* Warna teks utama */
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-transform: uppercase; /* Transformasi teks menjadi huruf kapital */
+            letter-spacing: 2px; /* Jarak antar huruf */
+        }
+        .saldo {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        .saldo span {
+            color: #28a745; /* Warna teks jumlah saldo */
+            font-weight: bold;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button-container a {
+            text-decoration: none;
+        }
+        .button-container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.1);
+        }
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+        form {
+            margin-top: 20px;
+        }
+        form button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(220, 53, 69, 0.1);
+        }
+        form button:hover {
+            background-color: #c82333;
+        }
+        .btn-outline-primary {
+            color: #007bff;
+            border-color: #007bff;
+            box-shadow: none;
+        }
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+    </style>
 </head>
 <body>
-    <h1>Selamat Datang, {{ Auth::user()->nama_lengkap }}</h1>
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button type="submit">Logout</button>
-    </form>
+    <div class="container">
+        <h1>Selamat Datang, {{ Auth::user()->nama_lengkap }}</h1>
+        
+        <div class="saldo">
+            Jumlah Saldo: <span>Rp{{ number_format(Auth::user()->saldo, 2, ',', '.') }}</span>
+        </div>
 
-    <a href="{{ route('saldo') }}">
-    <button>Cek Saldo</button>
+        <div class="button-container">
+            <a href="{{ route('saldo') }}"><button class="btn btn-outline-primary">Setor Uang</button></a>
+            <a href="{{ route('mutasi-rekening') }}"><button class="btn btn-outline-primary">Mutasi Rekening</button></a>
+        </div>
 
-    <a href="{{ route('mutasi-rekening') }}">Mutasi Rekening</a>
-</a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
 </body>
 </html>

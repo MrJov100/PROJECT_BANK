@@ -31,7 +31,6 @@ Route::get('saldo', [SaldoController::class, 'showSaldoForm'])->middleware('auth
 Route::post('saldo', [SaldoController::class, 'addSaldo'])->middleware('auth')->name('add-saldo');
 
 // routes/web.php
-
 use App\Http\Controllers\MutasiRekeningController;
 
 Route::get('mutasi-rekening', [MutasiRekeningController::class, 'index'])->middleware('auth')->name('mutasi-rekening');
