@@ -13,7 +13,9 @@ class TransferController extends Controller
 {
     public function showTransferForm()
     {
-        return view('transfer');
+        // Fetch users who have transactions (example)
+    $users = User::where('id', '!=', auth()->id())->get(); // Exclude current authenticated user
+    return view('transfer', compact('users'));
     }
 
     public function transfer(Request $request)

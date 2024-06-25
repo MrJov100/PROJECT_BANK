@@ -82,22 +82,31 @@
         <form action="{{ route('transfer') }}" method="POST">
             @csrf
             <div class="form-group">
-                <label for="nik">NIK Penerima:</label>
-                <input type="text" class="form-control" id="nik" name="nik" required>
+                <label for="nik">Pilih NIK Penerima:</label>
+                <select class="form-control" id="nik" name="nik">
+                    <option value="">-- Pilih NIK --</option>
+                    @foreach ($users as $user)
+                        <option value="{{ $user->nik }}">{{ $user->nama_lengkap }} ({{ $user->nik }})</option>
+                    @endforeach
+                </select>
+                <small class="text-muted">Atau masukkan NIK baru jika belum terdaftar.</small>
                 @error('nik')
-                <small class="text-danger">{{ $message }}</small><br>
-            @enderror
+                    <small class="text-danger">{{ $message }}</small><br>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="amount">Jumlah (Rp):</label>
                 <input type="number" class="form-control" id="amount" name="amount" step="0.01" required>
                 @error('amount')
-                <small class="text-danger">{{ $message }}</small><br>
-            @enderror
+                    <small class="text-danger">{{ $message }}</small><br>
+                @enderror
             </div>
             <button type="submit" class="btn btn-primary">Transfer</button>
         </form>
-        
     </div>
 </body>
+
+
+
+
 </html>
