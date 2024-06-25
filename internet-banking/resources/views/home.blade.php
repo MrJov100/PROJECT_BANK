@@ -9,5 +9,9 @@
         @csrf
         <button type="submit">Logout</button>
     </form>
+
+    <a href="{{ route('saldo') }}">
+    <button>Cek Saldo</button>
+</a>
 </body>
 </html>

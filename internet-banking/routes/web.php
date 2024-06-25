@@ -23,3 +23,9 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('home', function() {
     return view('home');
 })->middleware('auth')->name('home');
+
+
+use App\Http\Controllers\SaldoController;
+
+Route::get('saldo', [SaldoController::class, 'showSaldoForm'])->middleware('auth')->name('saldo');
+Route::post('saldo', [SaldoController::class, 'addSaldo'])->middleware('auth')->name('add-saldo');

@@ -10,7 +10,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'nama_lengkap', 'nik', 'email', 'password', 'tanggal_lahir', 'jenis_kelamin'
+        'nama_lengkap', 'nik', 'email', 'password', 'tanggal_lahir', 'jenis_kelamin', 'saldo'
     ];
 
     protected $hidden = [
@@ -21,4 +21,5 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 }
+
 
