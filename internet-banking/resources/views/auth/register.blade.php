@@ -44,15 +44,33 @@
         .container button:hover {
             background-color: #002266;
         }
+        .alert {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Register</h2>
+
+        @if(session('success_message'))
+        <div class="alert">
+            {{ session('success_message') }}
+        </div>
+        @endif
+
+        <!-- Registration form -->
         <form action="{{ route('register') }}" method="POST">
             @csrf
             <label for="nama_lengkap">Nama Lengkap:</label>
             <input type="text" id="nama_lengkap" name="nama_lengkap" required>
+
+            <label for="BANKID">BANKID:</label>
+            <input type="text" id="BANKID" name="BANKID" required>
 
             <label for="nik">NIK:</label>
             <input type="text" id="nik" name="nik" required>

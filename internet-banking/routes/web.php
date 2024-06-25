@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TransferController;
+use App\Http\Controllers\MutasiRekeningController;
+use App\Http\Controllers\SaldoController;
 
 // Welcome route
 Route::get('/', function () {
@@ -24,21 +27,13 @@ Route::get('home', function() {
     return view('home');
 })->middleware('auth')->name('home');
 
-
-use App\Http\Controllers\SaldoController;
-
 Route::get('saldo', [SaldoController::class, 'showSaldoForm'])->middleware('auth')->name('saldo');
 Route::post('saldo', [SaldoController::class, 'addSaldo'])->middleware('auth')->name('add-saldo');
 
-// routes/web.php
-use App\Http\Controllers\MutasiRekeningController;
-
 Route::get('mutasi-rekening', [MutasiRekeningController::class, 'index'])->middleware('auth')->name('mutasi-rekening');
-
-
-// routes/web.php
-
-use App\Http\Controllers\TransferController;
 
 Route::get('transfer', [TransferController::class, 'showTransferForm'])->middleware('auth')->name('transfer');
 Route::post('transfer', [TransferController::class, 'transfer'])->middleware('auth')->name('transfer.post');
+
+Route::get('set-pin', [AuthController::class, 'showSetPinForm'])->name('set.pin');
+Route::post('set-pin', [AuthController::class, 'setPin']);

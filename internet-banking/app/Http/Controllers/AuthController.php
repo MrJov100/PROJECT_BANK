@@ -19,6 +19,7 @@ class AuthController extends Controller
         // Validate the request data
         $validatedData = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
+            'BANKID' => 'required|string|max:255|unique:users',
             'nik' => 'required|string|size:16|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
@@ -26,20 +27,28 @@ class AuthController extends Controller
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
         ]);
 
-        // Create the user with validated data
+        // Create the user with validated data and generate a new account number
         $user = User::create([
             'nama_lengkap' => $validatedData['nama_lengkap'],
+            'BANKID' => $validatedData['BANKID'],
             'nik' => $validatedData['nik'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
             'tanggal_lahir' => $validatedData['tanggal_lahir'],
             'jenis_kelamin' => $validatedData['jenis_kelamin'],
+            'account_number' => $this->generateAccountNumber(),
         ]);
 
+        // Set account number in session flash
+        session()->flash('account_number', $user->account_number);
+
+        // Login the user
         Auth::login($user);
 
-        return redirect()->route('home');
+        // Redirect to set PIN view
+        return redirect()->route('set.pin');
     }
+
 
     public function showLoginForm()
     {
@@ -48,20 +57,58 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('nik', 'password');
+        $credentials = $request->only('BANKID', 'password');
 
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            
+            // Check if the user already has a PIN
+            if (!$user->pin) {
+                return redirect()->route('set.pin');
+            }
+            
             return redirect()->route('home');
         }
 
         return back()->withErrors([
-            'nik' => 'NIK atau password salah.',
+            'BANKID' => 'BANKID atau password salah.',
         ]);
+    }
+
+    public function showSetPinForm()
+    {
+        return view('auth.set-pin');
+    }
+
+    public function setPin(Request $request)
+    {
+        $validatedData = $request->validate([
+            'pin' => 'required|digits:6|confirmed',
+        ]);
+
+        $user = Auth::user(); // Mendapatkan pengguna yang sedang login
+        
+        if (!$user) {
+            return redirect()->route('login')->withErrors(['error' => 'Anda harus login untuk mengatur PIN.']);
+        }
+
+        $user->pin = Hash::make($validatedData['pin']);
+        $user->save();
+
+        // Logout user after setting PIN
+        Auth::logout();
+
+        return redirect()->route('login')->with('success_message', 'PIN Anda berhasil dibuat. Silahkan login untuk melanjutkan.');
     }
 
     public function logout()
     {
         Auth::logout();
         return redirect()->route('welcome');
+    }
+
+    private function generateAccountNumber()
+    {
+        return mt_rand(1000000000, 9999999999); // Generate a 10-digit random number
     }
 }
