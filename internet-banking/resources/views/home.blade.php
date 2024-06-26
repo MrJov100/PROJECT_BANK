@@ -33,12 +33,24 @@
             text-transform: uppercase; /* Transformasi teks menjadi huruf kapital */
             letter-spacing: 2px; /* Jarak antar huruf */
         }
-        .saldo {
-            font-size: 24px;
+        .saldo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin-bottom: 30px;
         }
-        .saldo span {
+        .saldo-text {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .saldo-value {
+            font-size: 24px;
             color: #28a745; /* Warna teks jumlah saldo */
+            font-weight: bold;
+        }
+        .saldo-hidden {
+            font-size: 24px;
+            color: #d9534f; /* Warna teks saat saldo tersembunyi */
             font-weight: bold;
         }
         .button-container {
@@ -51,7 +63,7 @@
             background-color: #007bff;
             color: #fff;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px; /* Mengurangi padding tombol */
             text-align: center;
             text-decoration: none;
             display: inline-block;
@@ -68,11 +80,12 @@
         form {
             margin-top: 20px;
         }
+        
         form button {
             background-color: #dc3545;
             color: #fff;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px; /* Mengurangi padding tombol */
             text-align: center;
             text-decoration: none;
             display: inline-block;
@@ -95,14 +108,60 @@
             color: #fff;
             border-color: #007bff;
         }
+        .rekening {
+            font-size: 18px; /* Ukuran font nomor rekening */
+            margin-bottom: 20px; /* Menambahkan margin bottom untuk jarak visual */
+            background-color: #f8f9fa; /* Warna latar belakang nomor rekening */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: inline-block; /* Menyesuaikan ukuran dengan konten */
+        }
+        .rekening span {
+            font-weight: bold;
+            color: #007bff; /* Warna teks nomor rekening */
+        }
     </style>
+    <script>
+        function toggleSaldo() {
+            var saldoElement = document.getElementById('saldo-value');
+            var toggleButton = document.getElementById('toggle-saldo-btn');
+            
+            if (saldoElement.innerHTML === 'Rp{{ number_format(Auth::user()->saldo, 2, ',', '.') }}') {
+                saldoElement.innerHTML = '*************';
+                toggleButton.innerHTML = '🔓 Lihat Saldo';
+                toggleButton.classList.remove('btn-danger');
+                toggleButton.classList.add('btn-success');
+            } else {
+                saldoElement.innerHTML = 'Rp{{ number_format(Auth::user()->saldo, 2, ',', '.') }}';
+                toggleButton.innerHTML = '🔒 Tutup Saldo';
+                toggleButton.classList.remove('btn-success');
+                toggleButton.classList.add('btn-danger');
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>Selamat Datang, {{ Auth::user()->nama_lengkap }}</h1>
-        
-        <div class="saldo">
-            Jumlah Saldo: <span>Rp{{ number_format(Auth::user()->saldo, 2, ',', '.') }}</span>
+
+        <div class="rekening">
+            Nomor Rekening: <span>{{ Auth::user()->account_number }}</span>
+        </div>
+
+        <div class="saldo-container">
+            <div class="saldo-text">
+                Saldo:
+            </div>
+            <div id="saldo-value" class="saldo-value">
+                Rp{{ number_format(Auth::user()->saldo, 2, ',', '.') }}
+            </div>
+            <div id="saldo-hidden" class="saldo-hidden" style="display: none;">
+                *************
+            </div>
+            <button id="toggle-saldo-btn" onclick="toggleSaldo()" class="btn btn-danger btn-toggle">
+                🔒 Tutup Saldo
+            </button>
         </div>
 
         <div class="button-container">
