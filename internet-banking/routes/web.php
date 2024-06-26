@@ -27,10 +27,17 @@ Route::get('home', function() {
     return view('home');
 })->middleware('auth')->name('home');
 
-Route::get('saldo', [SaldoController::class, 'showSaldoForm'])->middleware('auth')->name('saldo');
-Route::post('saldo', [SaldoController::class, 'addSaldo'])->middleware('auth')->name('add-saldo');
+// Rute untuk menampilkan form tambah saldo
+Route::get('/saldo', [SaldoController::class, 'showSaldoForm'])->name('saldo');
 
+// Rute untuk menangani permintaan tambah saldo
+Route::post('/add-saldo', [SaldoController::class, 'addSaldo'])->name('add-saldo');
+
+// Rute untuk menampilkan mutasi rekening
 Route::get('mutasi-rekening', [MutasiRekeningController::class, 'index'])->middleware('auth')->name('mutasi-rekening');
+
+// Rute untuk memvalidasi PIN
+Route::post('/validate-pin', [AuthController::class, 'validatePin'])->name('validate-pin');
 
 Route::get('transfer', [TransferController::class, 'showTransferForm'])->middleware('auth')->name('transfer');
 Route::post('transfer', [TransferController::class, 'transfer'])->middleware('auth')->name('transfer.post');

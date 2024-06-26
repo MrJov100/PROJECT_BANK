@@ -5,76 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Mutasi Rekening</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f0f0; /* Warna latar belakang */
-            margin: 0;
-            padding: 20px;
-        }
         .container {
-            background-color: #fff; /* Warna latar belakang konten */
+            background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             max-width: 800px;
             margin: 20px auto;
             padding: 30px;
         }
+
         h1 {
-            color: #007bff; /* Warna teks utama */
+            color: #007bff;
             margin-bottom: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 10px;
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 12px;
             text-align: left;
         }
-        table th {
-            background-color: #f2f2f2; /* Warna latar header kolom */
+
+        th {
+            background-color: #f2f2f2;
         }
-        table td {
-            font-size: 16px;
-        }
-        a {
-            color: #007bff; /* Warna link */
+
+        a.btn-back {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
             text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
             margin-top: 10px;
             display: inline-block;
         }
-        a:hover {
-            text-decoration: underline;
+
+        a.btn-back:hover {
+            background-color: #0056b3;
+            text-decoration: none;
         }
-        .btn-back {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-        margin-top: 10px;
-        display: inline-block;
-    }
-
-    .btn-back:hover {
-        background-color: #0056b3;
-        text-decoration: none;
-    }
-
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="transactions-container" style="display:none;">
         <h1>Daftar Mutasi Rekening</h1>
         <a href="{{ route('home') }}" class="btn-back">Kembali ke Home</a>
 
@@ -97,5 +88,50 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            Swal.fire({
+                title: 'Masukkan PIN',
+                input: 'password',
+                inputAttributes: {
+                    autocapitalize: 'off',
+                    name: 'pin'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Kirim',
+                showLoaderOnConfirm: true,
+                preConfirm: (pin) => {
+                    if (!pin) {
+                        Swal.showValidationMessage('PIN harus diisi.');
+                    }
+                    // Kirim PIN ke server untuk validasi
+                    return $.ajax({
+                        url: '{{ route("validate-pin") }}', // Pastikan rute ini ada di web.php
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            pin: pin
+                        },
+                        success: function(response) {
+                            if (!response.valid) {
+                                Swal.showValidationMessage('PIN salah.');
+                            }
+                            return response.valid;
+                        },
+                        error: function() {
+                            Swal.showValidationMessage('Terjadi kesalahan saat memvalidasi PIN.');
+                        }
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#transactions-container').show();
+                } else {
+                    window.location.href = '{{ route("home") }}';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -111,4 +111,17 @@ class AuthController extends Controller
     {
         return mt_rand(1000000000, 9999999999); // Generate a 10-digit random number
     }
+
+    public function validatePin(Request $request)
+{
+    $user = Auth::user();
+    $pin = $request->input('pin');
+
+    if (Hash::check($pin, $user->pin)) { // Pastikan hash pin di database
+        return response()->json(['valid' => true]);
+    } else {
+        return response()->json(['valid' => false]);
+    }
+}
+
 }

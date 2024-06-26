@@ -1,11 +1,10 @@
-<!-- resources/views/transfer.blade.php -->
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Transfer Saldo</title>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -79,7 +78,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        <form action="{{ route('transfer') }}" method="POST">
+        <form id="transfer-form" action="{{ route('transfer.post') }}" method="POST">
             @csrf
             <div class="form-group">
                 <label for="nik">Pilih NIK Penerima:</label>
@@ -101,12 +100,55 @@
                     <small class="text-danger">{{ $message }}</small><br>
                 @enderror
             </div>
-            <button type="submit" class="btn btn-primary">Transfer</button>
+            <button type="submit" class="btn btn-primary btn-transfer">Transfer</button>
         </form>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#transfer-form').on('submit', function(event) {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: 'Masukkan PIN',
+                    input: 'password',
+                    inputAttributes: {
+                        autocapitalize: 'off',
+                        name: 'pin'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Kirim',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (pin) => {
+                        if (!pin) {
+                            Swal.showValidationMessage('PIN harus diisi.');
+                        }
+                        // Kirim PIN ke server untuk validasi
+                        return $.ajax({
+                            url: '{{ route("validate-pin") }}',
+                            method: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                pin: pin
+                            },
+                            success: function(response) {
+                                if (!response.valid) {
+                                    Swal.showValidationMessage('PIN salah.');
+                                }
+                                return response.valid;
+                            },
+                            error: function() {
+                                Swal.showValidationMessage('Terjadi kesalahan saat memvalidasi PIN.');
+                            }
+                        });
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#transfer-form').off('submit').submit();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
-
-
-
-
 </html>
