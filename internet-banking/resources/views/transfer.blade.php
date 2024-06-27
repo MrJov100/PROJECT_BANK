@@ -81,15 +81,14 @@
         <form id="transfer-form" action="{{ route('transfer.post') }}" method="POST">
             @csrf
             <div class="form-group">
-                <label for="nik">Pilih NIK Penerima:</label>
-                <select class="form-control" id="nik" name="nik">
-                    <option value="">-- Pilih NIK --</option>
+                <label for="account_number">Pilih Rekening Penerima:</label>
+                <select class="form-control" id="account_number" name="account_number">
+                    <option value="">-- Pilih Nomor Rekening --</option>
                     @foreach ($users as $user)
-                        <option value="{{ $user->nik }}">{{ $user->nama_lengkap }} ({{ $user->nik }})</option>
+                        <option value="{{ $user->account_number }}">{{ $user->nama_lengkap }} ({{ $user->account_number }})</option>
                     @endforeach
                 </select>
-                <small class="text-muted">Atau masukkan NIK baru jika belum terdaftar.</small>
-                @error('nik')
+                @error('account_number')
                     <small class="text-danger">{{ $message }}</small><br>
                 @enderror
             </div>

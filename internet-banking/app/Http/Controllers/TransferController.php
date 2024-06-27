@@ -21,18 +21,18 @@ class TransferController extends Controller
     public function transfer(Request $request)
     {
         $request->validate([
-            'nik' => 'required|exists:users,nik',
+            'account_number' => 'required|exists:users,account_number',
             'amount' => 'required|numeric|min:10000',
         ],[
-            'nik.exists' => 'NIK penerima tidak ditemukan.',
+            'account_number.exists' => 'Rekening penerima tidak ditemukan.',
             'amount.min' => 'Minimal jumlah transfer adalah Rp 10,000.',
         ]);
 
         $sender = Auth::user();
-        $recipient = User::where('nik', $request->nik)->first();
+        $recipient = User::where('account_number', $request->account_number)->first();
 
         if (!$recipient) {
-            return redirect()->route('transfer')->withErrors(['nik' => 'Penerima tidak ditemukan.']);
+            return redirect()->route('transfer')->withErrors(['account_number' => 'Penerima tidak ditemukan.']);
         }
 
         if ($sender->saldo < $request->amount) {
